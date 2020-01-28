@@ -16,12 +16,12 @@
             </div>
         </div>
         <script type='text/javascript'>
-            var SCREEN_MODE = Object.freeze({
+            const SCREEN_MODE = Object.freeze({
                 UPLOAD: 1,
                 SCORES: 2
             });
 
-            var app = new Vue({ 
+            const app = new Vue({ 
                 el: '#app',
                 data: {
                     file: null,
@@ -38,7 +38,7 @@
                         const reader = new FileReader();
                         
                         reader.onload = () => {
-                            var results = [];
+                            const results = [];
                             const allLines = reader.result.split(/\r\n|\n/);
 
                             allLines.forEach((line) => {
