@@ -42,7 +42,7 @@
                     reader.onload = () => {
                         const results = [];
                         const allLines = reader.result.split(/\r\n|\n/);
-                        console.log('allLines', allLines)
+
                         allLines.forEach((line) => {
                             if (line !== '' && line !== undefined) {
                                 const entry = line.split(',');
