@@ -1,64 +1,72 @@
 <html>
-    <head>
-        <script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js'></script>
-    </head>
-    <body>
-        <div id='app'>
-            <div v-if='mode === SCREEN_MODE.UPLOAD'>
-                <input type='file' ref='file' @change='uploadFile'>
-            </div>
-            <div v-if='mode === SCREEN_MODE.SCORES'>
-                <div v-for='score in scores'>
-                    <p><strong>{{score.name}}</strong></p>
-                    <p>score: {{score.points}}</p>
-                </div>
-                <button type="button" @click="backClicked">Back</button>
-            </div>
+
+<head>
+    <script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js'></script>
+</head>
+
+<body>
+    <div id='app'>
+        <div v-if='mode === SCREEN_MODE.UPLOAD'>
+            <input type='file' ref='file' @change='uploadFile'>
         </div>
-        <script type='text/javascript'>
-            const SCREEN_MODE = Object.freeze({
-                UPLOAD: 1,
-                SCORES: 2
-            });
+        <div v-if='mode === SCREEN_MODE.SCORES'>
+            <div v-for='score in scores'>
+                <p><strong>{{score.name}}</strong></p>
+                <p>score: {{score.points}}</p>
+            </div>
+            <button type="button" @click="backClicked">Back</button>
+        </div>
+    </div>
+    <script type='text/javascript'>
+        const SCREEN_MODE = Object.freeze({
+            UPLOAD: 1,
+            SCORES: 2
+        });
 
-            const app = new Vue({ 
-                el: '#app',
-                data: {
-                    file: null,
-                    SCREEN_MODE,
-                    mode: SCREEN_MODE.UPLOAD,
-                    scores: []
+        const app = new Vue({
+            el: '#app',
+            data: {
+                file: null,
+                SCREEN_MODE,
+                mode: SCREEN_MODE.UPLOAD,
+                scores: []
+            },
+            methods: {
+                backClicked() {
+                    this.mode = SCREEN_MODE.UPLOAD;
                 },
-                methods: {
-                    backClicked() {
-                        this.mode = SCREEN_MODE.UPLOAD;
-                    },
-                    uploadFile() {
-                        const vm = this;
-                        const reader = new FileReader();
-                        
-                        reader.onload = () => {
-                            const results = [];
-                            const allLines = reader.result.split(/\r\n|\n/);
+                uploadFile() {
+                    const vm = this;
+                    const reader = new FileReader();
 
-                            allLines.forEach((line) => {
+                    reader.onload = () => {
+                        const results = [];
+                        const allLines = reader.result.split(/\r\n|\n/);
+                        console.log('allLines', allLines)
+                        allLines.forEach((line) => {
+                            if (line !== '' && line !== undefined) {
                                 const entry = line.split(',');
                                 const points = entry.slice(1);
 
                                 results.push({
                                     name: entry[0],
-                                    points: points.reduce((a,b) => parseInt(a) + parseInt(b)) / points.length
+                                    points: points.reduce((a, b) => parseInt(a) + parseInt(
+                                            b)) /
+                                        points.length
                                 });
-                            });
 
-                            vm.scores = results;
-                            vm.mode = SCREEN_MODE.SCORES;
-                        };
-                    
-                        reader.readAsBinaryString(this.$refs.file.files[0]);
-                    }
+                            }
+                        });
+
+                        vm.scores = results;
+                        vm.mode = SCREEN_MODE.SCORES;
+                    };
+
+                    reader.readAsBinaryString(this.$refs.file.files[0]);
                 }
-            });
-        </script>
-    </body>
+            }
+        });
+    </script>
+</body>
+
 </html>
